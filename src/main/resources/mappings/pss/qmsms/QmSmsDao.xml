@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pss.qmsms.dao.QmSmsDao">
+    
+	<sql id="qmSmsColumns">
+		a.sms_id AS "smsId",
+		a.sms_title AS "smsTitle",
+		a.sms_url AS "smsUrl",
+		a.sms_username AS "smsUsername",
+		a.sms_password AS "smsPassword",
+		a.sms_tkey AS "smsTkey",
+		a.sms_mobile AS "smsMobile",
+		a.sms_content AS "smsContent",
+		a.sms_productid AS "smsProductid",
+		a.sms_xh AS "smsXh"
+	</sql>
+
+	<sql id="qmUserColumns">
+		a.sms_id AS "smsId",
+		a.sms_title AS "smsTitle",
+		a.sms_url AS "smsUrl",
+		a.sms_username AS "smsUsername",
+		a.sms_password AS "smsPassword",
+		a.sms_tkey AS "smsTkey",
+		a.sms_mobile AS "smsMobile",
+		a.sms_content AS "smsContent",
+		a.sms_productid AS "smsProductid",
+		a.sms_xh AS "smsXh"
+	</sql>
+	<sql id="qmSmsJoins">
+	</sql>
+    
+	<select id="get" resultType="QmSms">
+		SELECT 
+			<include refid="qmSmsColumns"/>
+		FROM qm_sms a
+		<include refid="qmSmsJoins"/>
+		WHERE a.sms_id = #{id}
+	</select>
+
+
+
+	<!--<select id="getMobileById" resultType="java.util.List">-->
+		<!--SELECT-->
+		  	<!--u.mobile-->
+	  	<!--FROM-->
+			<!--sys_user u-->
+		<!--WHERE-->
+			<!--u.company_id = #{user.company.id}-->
+		<!--AND-->
+			<!--u.office_id = #{user.office.id}-->
+	<!--</select>-->
+	
+	<update id="update">
+		UPDATE qm_sms SET 	
+			sms_title = #{smsTitle},
+			sms_url = #{smsUrl},
+			sms_username = #{smsUsername},
+			sms_password = #{smsPassword},
+			sms_productid = #{smsProductid},
+			sms_xh = #{smsXh}
+		WHERE sms_id = #{id}
+	</update>
+
+</mapper>

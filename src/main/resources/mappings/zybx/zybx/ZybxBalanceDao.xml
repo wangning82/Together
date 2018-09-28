@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zybx.zybx.dao.ZybxBalanceDao">
+
+    <sql id="zybxBalanceColumns">
+		a.id AS "id",
+		a.identity_card AS "identityCard",
+		a.name AS "name",
+		a.mobile AS "mobile",
+		a.former_years_balance AS "formerYearsBalance",
+		a.year_2018_balance AS "year2018Balance",
+		a.end_date AS "endDate",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+    <sql id="zybxBalanceJoins">
+    </sql>
+
+    <select id="get" resultType="ZybxBalance">
+        SELECT
+        <include refid="zybxBalanceColumns"/>
+        FROM zybx_balance a
+        <include refid="zybxBalanceJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="ZybxBalance">
+        SELECT
+        <include refid="zybxBalanceColumns"/>
+        FROM zybx_balance a
+        <include refid="zybxBalanceJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="identityCard != null and identityCard != ''">
+                AND a.identity_card = #{identityCard}
+            </if>
+            <if test="name != null and name != ''">
+                AND a.name = #{name}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="ZybxBalance">
+        SELECT
+        <include refid="zybxBalanceColumns"/>
+        FROM zybx_balance a
+        <include refid="zybxBalanceJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO zybx_balance(
+			id,
+			identity_card,
+			name,
+			mobile,
+			former_years_balance,
+			year_2018_balance,
+			end_date,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{identityCard},
+			#{name},
+			#{mobile},
+			#{formerYearsBalance},
+			#{year2018Balance},
+			#{endDate},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE zybx_balance SET 	
+			identity_card = #{identityCard},
+			name = #{name},
+			mobile = #{mobile},
+			former_years_balance = #{formerYearsBalance},
+			year_2018_balance = #{year2018Balance},
+			end_date = #{endDate},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		UPDATE zybx_balance SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+    <!-- 根据身份证号码查询客户余额信息 -->
+    <select id="getByIdentityCard" resultType="ZybxBalance" parameterType="ZybxBalance">
+        SELECT
+        <include refid="zybxBalanceColumns"/>
+        FROM zybx_balance a
+        <include refid="zybxBalanceJoins"/>
+        WHERE a.identity_card = #{identityCard}
+        AND a.del_flag = #{DEL_FLAG_NORMAL}
+    </select>
+
+</mapper>
